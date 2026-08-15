@@ -2,6 +2,7 @@ package org.tarun.ecombackend.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.tarun.ecombackend.model.Product;
 import org.tarun.ecombackend.repo.ProductRepo;
@@ -27,6 +28,11 @@ public class ProductService {
     public  Product getProduct(int productId){
         Optional<Product> p = productRepo.findById(productId);
         return p.orElse(new Product(-1));
+    }
+
+    @Transactional(readOnly = true)
+    public List<Product> getProductsByKeyword(String keyword){
+        return productRepo.findByNameContainingOrDescriptionContainingOrBrandContainingOrCategoryContaining(keyword, keyword, keyword, keyword);
     }
 
     public Product addProduct(Product product, MultipartFile image) throws IOException {
